@@ -6,7 +6,7 @@ import os
 from collections import defaultdict
 
 tf.logging.set_verbosity(tf.logging.INFO)
-MAX_PREDICTION_SIZE=100
+MAX_PREDICTION_SIZE=200
 
 def load_data(data_file, vocab):
     def gen():
@@ -164,6 +164,7 @@ if __name__ == '__main__':
     parser.add_argument('--temperature', default=1.0, type=float, help='temperature')
     parser.add_argument('--dropout', default=0.2, type=float, help='dropout')
     parser.add_argument('--vocab_file', help='vocab file')
+    parser.add_argument('--samples', default=15, type=int, help='how many samples to generate')
     parser.add_argument('--export', action='store_true', help='export')
     args = parser.parse_args()
     vocab = init_vocab(args.vocab_file)
@@ -186,7 +187,7 @@ if __name__ == '__main__':
         for i, out in enumerate(estimator.predict(input_fn=predict_input_fn(vocab))):
             #print(idx_to_string(out, vocab))
             print(''.join([o.decode('utf8') for o in out]))
-            if i > 15:
+            if i > args.samples:
                 break
 
     #run_test(args, vocab)
